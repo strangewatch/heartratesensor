@@ -1,0 +1,7 @@
+<resources>
+
+    <string name="app_name">HeartRate Test</string>
+
+    <string name="last_reading_format">Last Reading: %s</string>
+    <string name="avg_interval_format">Avg Interval: %s</string>
+</resources>
