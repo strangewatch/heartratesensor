@@ -1,12 +1,14 @@
 package watch.strange.heart
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
+import android.os.Vibrator
 import android.support.v4.content.ContextCompat
 import android.support.wearable.activity.WearableActivity
 import kotlinx.android.synthetic.main.activity_main.*
@@ -28,6 +30,8 @@ class MainActivity : WearableActivity(), SensorEventListener {
     private var lastReadingMs = 0L
 
     private fun now() = System.currentTimeMillis()
+
+    private lateinit var vibrator: Vibrator
 
     // region: lifecycle
 
@@ -79,8 +83,9 @@ class MainActivity : WearableActivity(), SensorEventListener {
 
     private fun startMonitoring() {
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        heartSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_RATE)
-        sensorManager.registerListener(this, heartSensor, SensorManager.SENSOR_DELAY_NORMAL);
+        heartSensor = sensorManager.getDefaultSensor(Sensor.TYPE_HEART_BEAT)
+        sensorManager.registerListener(this, heartSensor, SensorManager.SENSOR_DELAY_FASTEST);
+        vibrator = getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
     }
 
     override fun onAccuracyChanged(p0: Sensor?, p1: Int) {
@@ -88,19 +93,16 @@ class MainActivity : WearableActivity(), SensorEventListener {
     }
 
     override fun onSensorChanged(event: SensorEvent) {
-        statusTv?.apply {
-            setTextColor(ContextCompat.getColor(context, R.color.sw_active))
-            text = "active"
-        }
-        if (event.sensor.type == Sensor.TYPE_HEART_RATE) {
+        if (event.sensor.type == Sensor.TYPE_HEART_BEAT) {
+            vibrator.vibrate(50)
             if (lastReadingMs > 0) {
                 readingIntervals.add(now() - lastReadingMs)
             }
 
             val thisReadingMs = now()
 
-            val thisReading = event.values[0].toInt()
-            lastReadingTv.text = thisReading.toString()
+            val thisReading = event.values[0]
+            lastReadingTv.text = "%.2f".format(thisReading)
 
             val avgInterval = calculateAverageInterval()
 

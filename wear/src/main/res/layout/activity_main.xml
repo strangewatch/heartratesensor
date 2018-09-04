@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/sw_primary_dark"
+    android:keepScreenOn="true"
     android:padding="@dimen/box_inset_layout_padding"
     tools:context="watch.strange.heart.MainActivity"
     tools:deviceIds="wear">
@@ -21,20 +22,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="left"
-            android:text="Heart rate monitor"
+            android:text="Peak detector"
             android:textAllCaps="true"
             android:textColor="@color/sw_gold"
-            android:textSize="12sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/statusTv"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="left"
-            android:text="Inactive"
-            android:textAllCaps="true"
-            android:textColor="@color/sw_inactive"
             android:textSize="12sp"
             android:textStyle="bold" />
 
